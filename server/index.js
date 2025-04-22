@@ -1,24 +1,19 @@
-// Add DELETE endpoint
+const express = require("express");
+const app = express();
+const PORT = 3001;
+
+// Middleware to parse JSON
+app.use(express.json());
+
+// Example DELETE route
 app.delete('/courses/:id', async (req, res) => {
-  const { id } = req.params;
-  const { error } = await supabase
-    .from('courses')
-    .delete()
-    .eq('id', id);
-
-  if (error) return res.status(500).json({ error });
-  res.json({ success: true });
+  const courseId = req.params.id;
+  // Normally you'd remove it from a database here
+  res.send(`Course with ID ${courseId} deleted`);
 });
 
-// Add input validation middleware
-const validateCourse = (req, res, next) => {
-  const { name } = req.body;
-  if (!name?.trim()) return res.status(400).json({ error: 'Course name required' });
-  if (name.length < 3) return res.status(400).json({ error: 'Name too short' });
-  next();
-};
-
-// Apply validation to POST
-app.post('/courses', validateCourse, async (req, res) => {
-  // ... existing code ...
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running at http://localhost:${PORT}`);
 });
+
